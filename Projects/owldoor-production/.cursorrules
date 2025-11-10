@@ -1,0 +1,38 @@
+# OwlDoor Production - THE ONLY REAL PROJECT
+
+CRITICAL RULES:
+- This is located at: ~/Projects/owldoor-production/
+- This is the ONLY owldoor project to reference
+- ALL other owldoor folders are FAILED attempts - DO NOT USE
+
+IGNORE THESE FOLDERS COMPLETELY:
+- ~/owldoor-FAIL-1-original
+- ~/owldoor-FAIL-2-crm-attempt  
+- ~/owldoor-FAIL-3-2026-version
+- ~/owldoor-FAIL-4-site-version
+- ANY folder with "FAIL" in the name
+
+PROJECT STACK:
+- Next.js 15 (App Router)
+- TypeScript (strict mode)
+- Supabase (Postgres database)
+- Tailwind CSS + Shadcn UI
+- Vercel deployment
+
+ARCHITECTURE:
+- /src/app - Pages and API routes
+- /src/components - React components
+- /src/lib - Utilities and API clients
+- /src/types - TypeScript definitions
+
+NEVER:
+- Import from FAIL folders
+- Reference old owldoor projects
+- Create new owldoor folders
+- Use relative imports outside this project
+
+ALWAYS:
+- Use @/ import alias
+- Follow TypeScript strict mode
+- Use Supabase client from /src/lib/supabase
+- Keep all code in ~/Projects/owldoor-production/
