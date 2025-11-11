@@ -41,6 +41,10 @@ import { AutoMatchTrigger } from "@/components/admin/AutoMatchTrigger";
 import { ZipRadiusGeocoder } from "@/components/admin/ZipRadiusGeocoder";
 import { MatchPreview } from "@/components/admin/MatchPreview";
 import { SystemLimitsManager } from "@/components/admin/SystemLimitsManager";
+import { ClaudableDesigner } from "@/components/admin/ClaudableDesigner";
+import { FrappeDesigner } from "@/components/admin/FrappeDesigner";
+import { VercelSiteEditor } from "@/components/admin/VercelSiteEditor";
+import { DragDropBuilder } from "@/components/admin/DragDropBuilder";
 import owlDoorLogo from "@/assets/owldoor-icon-green.png";
 
 interface Lead {
@@ -68,7 +72,24 @@ const AdminDashboard = () => {
   const [users, setUsers] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [activeFilter, setActiveFilter] = useState<string>("all");
-  const activeView = (searchParams.get("view") as "pipeline" | "analytics" | "users" | "settings" | "zapier" | "phones" | "support" | "clients" | "onboarding" | "geocoder" | "limits") || "pipeline";
+  const activeView =
+    (searchParams.get("view") as
+      | "pipeline"
+      | "analytics"
+      | "users"
+      | "settings"
+      | "zapier"
+      | "phones"
+      | "support"
+      | "clients"
+      | "onboarding"
+      | "geocoder"
+      | "limits"
+      | "builder"
+      | "frappe"
+      | "claudable"
+      | "vercel"
+      | "landing-builder") || "pipeline";
   const [viewMode, setViewMode] = useState<"list" | "kanban" | "map">("list");
   const [industryFilter, setIndustryFilter] = useState<"real_estate" | "mortgage">("real_estate");
   const [selectedLead, setSelectedLead] = useState<Lead | null>(null);
@@ -336,6 +357,16 @@ const AdminDashboard = () => {
           <SupportTicketsAdmin />
         ) : activeView === "clients" ? (
           <TeamsList onLoginAs={handleGenerateMagicLink} />
+        ) : activeView === "builder" ? (
+          <ClaudableDesigner />
+        ) : activeView === "frappe" ? (
+          <FrappeDesigner />
+        ) : activeView === "claudable" ? (
+          <ClaudableDesigner />
+        ) : activeView === "vercel" ? (
+          <VercelSiteEditor />
+        ) : activeView === "landing-builder" ? (
+          <DragDropBuilder />
         ) : activeView === "phones" ? (
           <AdminPhoneNumberManager />
         ) : activeView === "zapier" ? (

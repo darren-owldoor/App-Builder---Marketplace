@@ -1,4 +1,30 @@
-import { Home, Users, Settings, Zap, Phone, LifeBuoy, Package, Mail, MessageSquare, Send, Upload, UserPlus, MapPin, TrendingUp, FileText, Menu, Coins, Database, Bot, CreditCard, AlertTriangle } from "lucide-react";
+import {
+  Home,
+  Users,
+  Settings,
+  Zap,
+  Phone,
+  LifeBuoy,
+  Package,
+  Mail,
+  MessageSquare,
+  Send,
+  Upload,
+  UserPlus,
+  MapPin,
+  TrendingUp,
+  FileText,
+  Menu,
+  Coins,
+  Database,
+  Bot,
+  CreditCard,
+  AlertTriangle,
+  Palette,
+  LayoutTemplate,
+  Code,
+  Globe,
+} from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -51,6 +77,26 @@ const navItems: NavItem[] = [
     title: "Analytics",
     href: "/admin?view=analytics",
     icon: TrendingUp,
+  },
+  {
+    title: "Frappe Designer",
+    href: "/admin?view=frappe",
+    icon: Code,
+  },
+  {
+    title: "Claudable Builder",
+    href: "/admin?view=claudable",
+    icon: Palette,
+  },
+  {
+    title: "Vercel Sites",
+    href: "/admin?view=vercel",
+    icon: Globe,
+  },
+  {
+    title: "Landing Builder",
+    href: "/admin?view=landing-builder",
+    icon: LayoutTemplate,
   },
   {
     title: "Campaigns",

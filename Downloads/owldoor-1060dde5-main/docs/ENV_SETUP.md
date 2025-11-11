@@ -10,9 +10,15 @@ VITE_SUPABASE_PUBLISHABLE_KEY=<anon-or-public-key>
 VITE_SUPABASE_PROJECT_ID=oouyhixnjwjnombgcyjl
 VITE_GOOGLE_MAPS_API_KEY=<google-maps-browser-key>
 VITE_HCAPTCHA_SITE_KEY=<hcaptcha-site-key>
+VITE_CLAUDABLE_URL=https://your-self-hosted-claudable.example.com/?embed=1
+VITE_FRAPPE_URL=https://your-self-hosted-frappe.example.com/?embed=1
+VITE_VERCEL_TOKEN=<vercel-api-token>
 ```
 
 - Values prefixed with `VITE_` become part of the browser bundle—only include keys safe for public use.
+- `VITE_CLAUDABLE_URL` is optional; if omitted, the admin builder defaults to the public Claudable sandbox.
+- `VITE_FRAPPE_URL` is optional; if omitted, the Frappe designer defaults to the public Frappe URL.
+- `VITE_VERCEL_TOKEN` is optional; if omitted, you can configure it directly in the Vercel Site Editor UI. This token is stored in localStorage for convenience.
 - After editing, restart `npm run dev` locally (or redeploy on Vercel) so Vite rebuilds with the new values.
 
 ## Supabase Edge Functions (`supabase/.env`)
@@ -47,9 +53,14 @@ vercel env add VITE_SUPABASE_PUBLISHABLE_KEY
 vercel env add VITE_SUPABASE_PROJECT_ID
 vercel env add VITE_GOOGLE_MAPS_API_KEY
 vercel env add VITE_HCAPTCHA_SITE_KEY
+vercel env add VITE_CLAUDABLE_URL
+vercel env add VITE_FRAPPE_URL
+vercel env add VITE_VERCEL_TOKEN
 ```
 
-Repeat the command for each value, providing the same string you placed in `.env.local`. Use Vercel’s “Preview” and “Production” environments if the values differ.
+Repeat the command for each value, providing the same string you placed in `.env.local`. Use Vercel's "Preview" and "Production" environments if the values differ.
+
+**Note:** For Vercel token, you can also configure it directly in the admin panel under "Vercel Sites" view. The token is stored securely in localStorage.
 
 ### Sync to Local
 
