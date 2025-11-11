@@ -1,0 +1,244 @@
+project_id = "oouyhixnjwjnombgcyjl"
+
+[functions.admin-export-data]
+verify_jwt = true
+
+[functions.admin-merge-fields]
+verify_jwt = true
+
+[functions.admin-update-sync-config]
+verify_jwt = true
+
+[functions.auto-match-leads]
+verify_jwt = false
+
+[functions.backup-sync]
+verify_jwt = false
+
+[functions.claude-data-assistant]
+verify_jwt = true
+
+[functions.agent-directory-signup]
+verify_jwt = false
+
+[functions.verify-code]
+verify_jwt = false
+
+[functions.verify-magic-link]
+verify_jwt = false
+
+[functions.client-webhook]
+verify_jwt = false
+
+[functions.agent-verify-phone]
+verify_jwt = false
+
+[functions.agent-webhook]
+verify_jwt = false
+
+[functions.agent-lead-webhook]
+verify_jwt = false
+
+[functions.create-client-admin]
+verify_jwt = false
+
+[functions.create-test-user]
+verify_jwt = true
+
+[functions.pdl-enrich]
+verify_jwt = true
+
+[functions.auto-enrich-trigger]
+verify_jwt = true
+
+[functions.stripe-webhook]
+verify_jwt = false
+
+[functions.chat-broker]
+verify_jwt = true
+
+[functions.agent-chat]
+verify_jwt = true
+
+[functions.admin-ai-chat]
+verify_jwt = true
+
+[functions.ai-onboarding-chat]
+verify_jwt = true
+
+[functions.twilio-webhook]
+verify_jwt = false
+
+[functions.import-lead-zapier]
+verify_jwt = false
+
+[functions.zapier-api]
+verify_jwt = false
+
+[functions.zapier-webhook-subscribe]
+verify_jwt = false
+
+[functions.zapier-export]
+verify_jwt = false
+
+[functions.zapier-import]
+verify_jwt = false
+
+[functions.create-payment-link]
+verify_jwt = true
+
+[functions.get-maps-config]
+verify_jwt = true
+
+[functions.get-agents]
+verify_jwt = false
+
+[functions.process-campaigns]
+verify_jwt = false
+
+[functions.process-refund]
+verify_jwt = true
+
+[functions.save-payment-config]
+verify_jwt = true
+
+[functions.save-sendgrid-config]
+verify_jwt = true
+
+[functions.send-campaign-sms]
+verify_jwt = true
+
+[functions.send-email-sendgrid]
+verify_jwt = true
+
+[functions.send-sms-provider]
+verify_jwt = true
+
+[functions.twilio-configure-number]
+verify_jwt = true
+
+[functions.twilio-purchase-number]
+verify_jwt = true
+
+[functions.twilio-search-numbers]
+verify_jwt = true
+
+[functions.twilio-manage-accounts]
+verify_jwt = true
+
+[functions.twilio-manage-phone-numbers]
+verify_jwt = true
+
+[functions.generate-blog-image]
+verify_jwt = false
+
+[functions.send-test-sms]
+verify_jwt = false
+
+[functions.check-2fa-required]
+verify_jwt = false
+
+[functions.calendly-oauth-initiate]
+verify_jwt = true
+
+[functions.calendly-oauth-callback]
+verify_jwt = false
+
+[functions.calendly-get-user]
+verify_jwt = true
+
+[functions.calendly-get-events]
+verify_jwt = true
+
+[functions.calendly-disconnect]
+verify_jwt = true
+
+[functions.calendly-webhook]
+verify_jwt = false
+
+[functions.zapier-create-pro]
+verify_jwt = false
+
+[functions.zapier-update-stage]
+verify_jwt = false
+
+[functions.cronofy-oauth-initiate]
+verify_jwt = true
+
+[functions.cronofy-oauth-callback]
+verify_jwt = false
+
+[functions.cronofy-get-events]
+verify_jwt = true
+
+[functions.cronofy-disconnect]
+verify_jwt = true
+
+[functions.cronofy-list-calendars]
+verify_jwt = true
+
+[functions.cronofy-read-events]
+verify_jwt = true
+
+[functions.cronofy-upsert-event]
+verify_jwt = true
+
+[functions.cronofy-delete-event]
+verify_jwt = true
+
+[functions.cronofy-availability]
+verify_jwt = true
+
+[functions.cronofy-create-scheduling-link]
+verify_jwt = true
+
+[functions.geocode]
+verify_jwt = false
+
+[functions.geocode-area]
+verify_jwt = true
+
+[functions.create-checkout]
+verify_jwt = true
+
+[functions.check-client-eligibility]
+verify_jwt = true
+
+[functions.check-payment-method]
+verify_jwt = true
+
+[functions.setup-payment-method]
+verify_jwt = true
+
+[functions.confirm-payment-method]
+verify_jwt = true
+
+[functions.ai-chat-multi]
+verify_jwt = false
+
+[functions.match-with-ai]
+verify_jwt = true
+
+[functions.get-stripe-config]
+verify_jwt = false
+
+[functions.purchase-recruit]
+verify_jwt = true
+
+[functions.notify-admin-signup]
+verify_jwt = false
+
+[functions.send-contact-email]
+verify_jwt = false
+
+[functions.generate-payment-link]
+verify_jwt = true
+
+[functions.ai-campaign-chat]
+verify_jwt = false
+
+[functions.client-ai-chat]
+verify_jwt = true
+
+[functions.send-rate-limit-alert]
+verify_jwt = false

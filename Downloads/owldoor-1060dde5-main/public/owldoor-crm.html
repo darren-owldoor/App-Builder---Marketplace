@@ -1,0 +1,1632 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OwlDoor - Agent to Office/Team Matching Platform</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-green: #35a87e;
+            --light-green: #acdcbd;
+            --dark-green: #2a8561;
+            --pale-green: #e8f7ee;
+            --white: #ffffff;
+            --dark: #1a2f26;
+            --gray: #6b7280;
+            --light-gray: #f3f4f6;
+            --gold: #52c41a;  /* Changed to bright green */
+            --purple: #237d4f; /* Changed to forest green */
+            --blue: #40a070;   /* Changed to teal green */
+            --owl-dark: #4a5568;
+            --mint-green: #4ade80;
+            --emerald: #10b981;
+            --jade: #059669;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Inter', Roboto, sans-serif;
+            background: linear-gradient(135deg, var(--pale-green) 0%, var(--light-green) 50%, var(--primary-green) 100%);
+            min-height: 100vh;
+            padding: 20px;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* Animated Background */
+        .bg-shape {
+            position: fixed;
+            border-radius: 50%;
+            opacity: 0.1;
+            animation: float 20s infinite ease-in-out;
+        }
+
+        .bg-shape-1 {
+            width: 300px;
+            height: 300px;
+            background: var(--primary-green);
+            top: -100px;
+            right: -100px;
+        }
+
+        .bg-shape-2 {
+            width: 200px;
+            height: 200px;
+            background: var(--light-green);
+            bottom: -50px;
+            left: -50px;
+            animation-delay: -5s;
+        }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0) rotate(0deg);
+            }
+            25% {
+                transform: translateY(-20px) rotate(90deg);
+            }
+            50% {
+                transform: translateY(10px) rotate(180deg);
+            }
+            75% {
+                transform: translateY(-10px) rotate(270deg);
+            }
+        }
+
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Header */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: linear-gradient(135deg, var(--primary-green) 0%, var(--dark-green) 100%);
+            padding: 20px 35px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(53, 168, 126, 0.3);
+            margin-bottom: 30px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            animation: shine 3s infinite;
+        }
+
+        @keyframes shine {
+            0% {
+                left: -100%;
+            }
+            100% {
+                left: 100%;
+            }
+        }
+
+        .logo-section {
+            display: flex;
+            align-items: center;
+        }
+
+        .logo-container {
+            width: 55px;
+            height: 55px;
+            background: var(--owl-dark);
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+            padding: 8px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            animation: logoFloat 3s ease-in-out infinite;
+        }
+
+        @keyframes logoFloat {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-3px);
+            }
+        }
+
+        .logo-container svg {
+            width: 100%;
+            height: 100%;
+        }
+
+        .logo-text {
+            color: white;
+        }
+
+        .logo-title {
+            font-size: 28px;
+            font-weight: 800;
+        }
+
+        .logo-subtitle {
+            font-size: 14px;
+            opacity: 0.9;
+            font-weight: 400;
+            margin-top: 2px;
+        }
+
+        /* Icon Buttons */
+        .action-icons {
+            display: flex;
+            gap: 15px;
+        }
+
+        .icon-badge {
+            width: 50px;
+            height: 50px;
+            background: white;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+        }
+
+        .icon-badge:hover {
+            transform: translateY(-3px) scale(1.1);
+            box-shadow: 0 5px 20px rgba(53, 168, 126, 0.4);
+        }
+
+        .icon-badge svg {
+            width: 24px;
+            height: 24px;
+            fill: var(--primary-green);
+        }
+
+        .icon-counter {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background: #ff4757;
+            color: white;
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            font-weight: bold;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% {
+                box-shadow: 0 0 0 0 rgba(255, 71, 87, 0.7);
+            }
+            70% {
+                box-shadow: 0 0 0 15px rgba(255, 71, 87, 0);
+            }
+            100% {
+                box-shadow: 0 0 0 0 rgba(255, 71, 87, 0);
+            }
+        }
+
+        /* Stats Cards */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 25px;
+            border-radius: 18px;
+            box-shadow: 0 5px 20px rgba(53, 168, 126, 0.15);
+            text-align: center;
+            transition: all 0.3s;
+            border: 2px solid transparent;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary-green), var(--light-green));
+            transform: scaleX(0);
+            transition: transform 0.3s;
+        }
+
+        .stat-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--primary-green);
+            box-shadow: 0 10px 30px rgba(53, 168, 126, 0.3);
+        }
+
+        .stat-icon {
+            width: 45px;
+            height: 45px;
+            background: linear-gradient(135deg, var(--primary-green), var(--dark-green));
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 15px;
+        }
+
+        .stat-icon svg {
+            width: 24px;
+            height: 24px;
+            fill: white;
+        }
+
+        .stat-number {
+            font-size: 32px;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--primary-green), var(--dark-green));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 8px;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: var(--gray);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* Dashboard Grid */
+        .dashboard {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 25px;
+        }
+
+        /* Activity Panel */
+        .activity-panel {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(53, 168, 126, 0.15);
+            border: 2px solid var(--light-green);
+            max-height: 400px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .panel-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 3px solid var(--light-green);
+        }
+
+        .panel-title {
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--dark);
+            display: flex;
+            align-items: center;
+        }
+
+        .live-indicator {
+            width: 10px;
+            height: 10px;
+            background: #ff4757;
+            border-radius: 50%;
+            margin-left: 12px;
+            animation: pulse 2s infinite;
+        }
+
+        .filter-btn {
+            padding: 10px 20px;
+            background: linear-gradient(135deg, var(--primary-green), var(--dark-green));
+            border: none;
+            border-radius: 10px;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 3px 10px rgba(53, 168, 126, 0.3);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .filter-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(53, 168, 126, 0.4);
+        }
+
+        .filter-btn svg {
+            width: 16px;
+            height: 16px;
+            fill: white;
+        }
+
+        /* Activity Items */
+        .activity-list {
+            max-height: 650px;
+            overflow-y: auto;
+            padding-right: 10px;
+        }
+
+        .activity-list::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .activity-list::-webkit-scrollbar-track {
+            background: var(--pale-green);
+            border-radius: 4px;
+        }
+
+        .activity-list::-webkit-scrollbar-thumb {
+            background: var(--primary-green);
+            border-radius: 4px;
+        }
+
+        .activity-item {
+            display: flex;
+            align-items: center;
+            padding: 18px;
+            margin-bottom: 15px;
+            background: linear-gradient(135deg, var(--pale-green), white);
+            border-radius: 15px;
+            border-left: 5px solid var(--primary-green);
+            animation: slideIn 0.5s ease-out;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .activity-item.match-team {
+            border-left-color: var(--emerald);
+            background: linear-gradient(135deg, #d1fae5, white);
+        }
+
+        .activity-item.match-office {
+            border-left-color: var(--jade);
+            background: linear-gradient(135deg, #a7f3d0, white);
+        }
+
+        .activity-item.match-lender {
+            border-left-color: var(--mint-green);
+            background: linear-gradient(135deg, #bbf7d0, white);
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .activity-item:hover {
+            transform: translateX(8px);
+            box-shadow: 0 5px 20px rgba(53, 168, 126, 0.2);
+            border-left-width: 8px;
+        }
+
+        .activity-type-icon {
+            width: 45px;
+            height: 45px;
+            background: linear-gradient(135deg, var(--primary-green), var(--dark-green));
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+            flex-shrink: 0;
+        }
+
+        .activity-type-icon svg {
+            width: 24px;
+            height: 24px;
+            fill: white;
+        }
+
+        .activity-type-icon.team {
+            background: linear-gradient(135deg, var(--emerald), #059669);
+        }
+
+        .activity-type-icon.office {
+            background: linear-gradient(135deg, var(--jade), #047857);
+        }
+
+        .activity-type-icon.lender {
+            background: linear-gradient(135deg, var(--mint-green), #22c55e);
+        }
+
+        .activity-content {
+            flex: 1;
+        }
+
+        .activity-main {
+            font-size: 15px;
+            color: var(--dark);
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .activity-detail {
+            font-size: 13px;
+            color: var(--gray);
+            margin-bottom: 8px;
+        }
+
+        .activity-benefits {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .benefit-tag {
+            padding: 3px 8px;
+            background: var(--primary-green);
+            color: white;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        .benefit-tag.gold {
+            background: var(--emerald);
+        }
+
+        .activity-time {
+            font-size: 11px;
+            color: var(--primary-green);
+            font-weight: 600;
+            margin-top: 5px;
+        }
+
+        /* Match Notifications */
+        .notification-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .match-notification {
+            background: white;
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.2);
+            min-width: 400px;
+            max-width: 450px;
+            animation: slideInRight 0.5s ease-out;
+            position: relative;
+            overflow: hidden;
+        }
+
+        @keyframes slideInRight {
+            from {
+                transform: translateX(500px);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        .match-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .match-icon {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, var(--emerald), #059669);
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+            animation: iconPop 0.5s ease-out;
+        }
+
+        .match-icon svg {
+            width: 28px;
+            height: 28px;
+            fill: white;
+        }
+
+        @keyframes iconPop {
+            0% {
+                transform: scale(0);
+            }
+            50% {
+                transform: scale(1.2);
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        .match-title {
+            flex: 1;
+        }
+
+        .match-title h3 {
+            font-size: 18px;
+            color: var(--dark);
+            margin-bottom: 3px;
+        }
+
+        .match-subtitle {
+            font-size: 13px;
+            color: var(--gray);
+        }
+
+        .match-close {
+            width: 30px;
+            height: 30px;
+            background: var(--pale-green);
+            border-radius: 50%;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+            color: var(--primary-green);
+            font-weight: bold;
+            font-size: 18px;
+        }
+
+        .match-close:hover {
+            background: var(--primary-green);
+            color: white;
+            transform: rotate(90deg);
+        }
+
+        .match-details {
+            background: linear-gradient(135deg, var(--pale-green), var(--light-green));
+            padding: 15px;
+            border-radius: 12px;
+            margin-bottom: 15px;
+        }
+
+        .match-detail-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        .match-detail-label {
+            color: var(--gray);
+        }
+
+        .match-detail-value {
+            color: var(--dark);
+            font-weight: 600;
+        }
+
+        .match-benefits {
+            margin-bottom: 15px;
+        }
+
+        .match-benefits-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--dark);
+            margin-bottom: 10px;
+        }
+
+        .benefit-list {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+        }
+
+        .benefit-item {
+            display: flex;
+            align-items: center;
+            font-size: 13px;
+            color: var(--dark);
+        }
+
+        .benefit-check {
+            width: 20px;
+            height: 20px;
+            background: var(--primary-green);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 8px;
+            flex-shrink: 0;
+        }
+
+        .benefit-check svg {
+            width: 12px;
+            height: 12px;
+            fill: white;
+        }
+
+        .match-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .match-btn {
+            flex: 1;
+            padding: 12px;
+            border-radius: 10px;
+            border: none;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .match-btn.primary {
+            background: linear-gradient(135deg, var(--primary-green), var(--dark-green));
+            color: white;
+        }
+
+        .match-btn.primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(53, 168, 126, 0.3);
+        }
+
+        .match-btn.secondary {
+            background: var(--pale-green);
+            color: var(--primary-green);
+        }
+
+        .match-btn.secondary:hover {
+            background: var(--light-green);
+        }
+
+        /* Teams/Offices Table */
+        .agents-panel {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(53, 168, 126, 0.15);
+            border: 2px solid var(--light-green);
+        }
+
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .tab {
+            padding: 10px 20px;
+            background: var(--pale-green);
+            border-radius: 10px;
+            border: none;
+            color: var(--dark);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .tab.active {
+            background: linear-gradient(135deg, var(--primary-green), var(--dark-green));
+            color: white;
+        }
+
+        .search-bar {
+            width: 100%;
+            padding: 15px 20px 15px 45px;
+            border: 3px solid var(--light-green);
+            border-radius: 12px;
+            font-size: 15px;
+            margin-bottom: 25px;
+            transition: all 0.3s;
+            background: var(--pale-green);
+            position: relative;
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 20px;
+            height: 20px;
+            fill: var(--gray);
+        }
+
+        .search-wrapper {
+            position: relative;
+        }
+
+        .search-bar:focus {
+            outline: none;
+            border-color: var(--primary-green);
+            background: white;
+            box-shadow: 0 0 0 5px rgba(53, 168, 126, 0.1);
+        }
+
+        .table-header {
+            display: grid;
+            grid-template-columns: 2fr 2fr 1fr 1fr 1fr 1.5fr;
+            padding: 15px;
+            background: linear-gradient(135deg, var(--primary-green), var(--dark-green));
+            border-radius: 10px;
+            margin-bottom: 15px;
+            font-size: 13px;
+            font-weight: 700;
+            color: white;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .entity-row {
+            display: grid;
+            grid-template-columns: 2fr 2fr 1fr 1fr 1fr 1.5fr;
+            padding: 18px 15px;
+            align-items: center;
+            border-bottom: 2px solid var(--pale-green);
+            transition: all 0.3s;
+            border-radius: 10px;
+            margin-bottom: 8px;
+        }
+
+        .entity-row:hover {
+            background: linear-gradient(135deg, var(--pale-green), white);
+            transform: translateX(10px);
+            box-shadow: 0 5px 15px rgba(53, 168, 126, 0.15);
+        }
+
+        .entity-info {
+            display: flex;
+            align-items: center;
+        }
+
+        .entity-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary-green), var(--dark-green));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+            margin-right: 12px;
+            font-size: 14px;
+        }
+
+        .entity-name {
+            font-weight: 600;
+            color: var(--dark);
+            font-size: 15px;
+        }
+
+        .commission-split {
+            display: inline-block;
+            padding: 6px 12px;
+            background: linear-gradient(135deg, var(--mint-green), #22c55e);
+            color: white;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+        .leads-badge {
+            display: inline-block;
+            padding: 6px 12px;
+            background: linear-gradient(135deg, var(--primary-green), var(--dark-green));
+            color: white;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+        .rating {
+            color: var(--emerald);
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .rating svg {
+            width: 16px;
+            height: 16px;
+            fill: var(--emerald);
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 8px;
+        }
+
+        .action-btn {
+            padding: 8px 16px;
+            background: var(--pale-green);
+            border: none;
+            border-radius: 8px;
+            color: var(--primary-green);
+            font-weight: 600;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .action-btn:hover {
+            background: var(--primary-green);
+            color: white;
+            transform: scale(1.05);
+        }
+
+        /* Loading Animation */
+        .loading-bar {
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary-green) 0%, var(--light-green) 50%, var(--primary-green) 100%);
+            background-size: 200% 100%;
+            animation: loading 2s linear infinite;
+            border-radius: 4px;
+            margin-bottom: 20px;
+        }
+
+        @keyframes loading {
+            0% {
+                background-position: 200% 0;
+            }
+            100% {
+                background-position: -200% 0;
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 1400px) {
+            .dashboard {
+                grid-template-columns: 1fr;
+            }
+            
+            .stats-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Background Shapes -->
+    <div class="bg-shape bg-shape-1"></div>
+    <div class="bg-shape bg-shape-2"></div>
+
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <div class="logo-section">
+                <div class="logo-container">
+                    <!-- OwlDoor Logo SVG -->
+                    <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                        <g fill="white">
+                            <!-- Owl Face/Eyes -->
+                            <ellipse cx="35" cy="35" rx="15" ry="18" fill="none" stroke="white" stroke-width="3"/>
+                            <ellipse cx="65" cy="35" rx="15" ry="18" fill="none" stroke="white" stroke-width="3"/>
+                            <circle cx="35" cy="35" r="8" fill="white"/>
+                            <circle cx="65" cy="35" r="8" fill="white"/>
+                            <!-- Beak -->
+                            <path d="M50 45 L45 55 L50 50 L55 55 Z" fill="white"/>
+                            <!-- Body -->
+                            <path d="M20 50 Q20 80 50 80 Q80 80 80 50 L80 60 Q80 85 50 85 Q20 85 20 60 Z" fill="white"/>
+                            <!-- Wing detail -->
+                            <circle cx="25" cy="65" r="3" fill="white"/>
+                        </g>
+                    </svg>
+                </div>
+                <div class="logo-text">
+                    <div class="logo-title">OwlDoor</div>
+                    <div class="logo-subtitle">Agent Matching Platform</div>
+                </div>
+            </div>
+            <div class="action-icons">
+                <div class="icon-badge" onclick="showTeamMatch()">
+                    <!-- Trophy Icon -->
+                    <svg viewBox="0 0 24 24">
+                        <path d="M7 2V7C7 11.418 10.582 15 15 15C15.936 15 16.807 14.775 17.583 14.373L18 17H6L6.417 14.373C7.193 14.775 8.064 15 9 15C13.418 15 17 11.418 17 7V2H22V7H20C20 9.209 18.209 11 16 11H15.414C16.411 9.973 17 8.563 17 7V4H19V7H18C18 7.553 17.553 8 17 8V2H7ZM5 2V7C5 7.553 4.447 8 4 8V7H3V4H5V2H2V7H0V2H5ZM9 18H15V20H9V18ZM7 21H17L18 22H6L7 21Z"/>
+                    </svg>
+                    <span class="icon-counter">3</span>
+                </div>
+                <div class="icon-badge" onclick="showOfficeMatch()">
+                    <!-- Building Icon -->
+                    <svg viewBox="0 0 24 24">
+                        <path d="M3 21H21V19H3V21ZM5 7V17H19V7H5ZM7 9H9V11H7V9ZM11 9H13V11H11V9ZM15 9H17V11H15V9ZM7 13H9V15H7V13ZM11 13H13V15H11V13ZM15 13H17V15H15V13ZM21 5H3V3H21V5Z"/>
+                    </svg>
+                    <span class="icon-counter">2</span>
+                </div>
+                <div class="icon-badge" onclick="showLenderMatch()">
+                    <!-- Dollar Icon -->
+                    <svg viewBox="0 0 24 24">
+                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1.41 16.09V20h-2.67v-1.93c-1.71-.36-3.16-1.46-3.27-3.4h1.96c.1.81.45 1.61 1.67 1.61 1.16 0 1.6-.64 1.6-1.23 0-.54-.3-1.08-1.75-1.43-1.44-.35-3.08-.85-3.08-2.83 0-1.37 1.02-2.58 2.92-2.98V6h2.67v1.95c1.37.37 2.55 1.35 2.68 3.08h-1.96c-.08-.64-.42-1.32-1.44-1.32-1.14 0-1.44.56-1.44 1.07 0 .59.4.98 1.82 1.34 1.43.36 3.15 1.04 3.15 3.08 0 1.44-1.1 2.62-3.16 2.89z"/>
+                    </svg>
+                    <span class="icon-counter">5</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Stats Cards -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <!-- Users Icon -->
+                    <svg viewBox="0 0 24 24">
+                        <path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/>
+                    </svg>
+                </div>
+                <div class="stat-number" id="totalAgents">1,247</div>
+                <div class="stat-label">Active Agents</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <!-- Office Building Icon -->
+                    <svg viewBox="0 0 24 24">
+                        <path d="M12 7V3H2v18h20V7H12zM6 19H4v-2h2v2zm0-4H4v-2h2v2zm0-4H4V9h2v2zm0-4H4V5h2v2zm4 12H8v-2h2v2zm0-4H8v-2h2v2zm0-4H8V9h2v2zm0-4H8V5h2v2zm10 12h-8v-2h2v-2h-2v-2h2v-2h-2V9h8v10zm-2-8h-2v2h2v-2zm0 4h-2v2h2v-2z"/>
+                    </svg>
+                </div>
+                <div class="stat-number" id="offices">89</div>
+                <div class="stat-label">Partner Offices</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <!-- Team/Trophy Icon -->
+                    <svg viewBox="0 0 24 24">
+                        <path d="M7 2V7C7 11.418 10.582 15 15 15C15.936 15 16.807 14.775 17.583 14.373L18 17H6L6.417 14.373C7.193 14.775 8.064 15 9 15C13.418 15 17 11.418 17 7V2H7Z"/>
+                    </svg>
+                </div>
+                <div class="stat-number" id="teams">156</div>
+                <div class="stat-label">Top Teams</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <!-- Bank/Lender Icon -->
+                    <svg viewBox="0 0 24 24">
+                        <path d="M4 10v7h3v-7H4zm6 0v7h3v-7h-3zM2 22h19v-3H2v3zm14-12v7h3v-7h-3zm-4.5-9L2 6v2h19V6l-9.5-5z"/>
+                    </svg>
+                </div>
+                <div class="stat-number" id="lenders">43</div>
+                <div class="stat-label">Lender Partners</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <!-- Handshake Icon -->
+                    <svg viewBox="0 0 24 24">
+                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                    </svg>
+                </div>
+                <div class="stat-number" id="matches">328</div>
+                <div class="stat-label">Matches Today</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <!-- Chart Icon -->
+                    <svg viewBox="0 0 24 24">
+                        <path d="M16,6L18.29,8.29L13.41,13.17L9.41,9.17L2,16.59L3.41,18L9.41,12L13.41,16L19.71,9.71L22,12V6H16Z"/>
+                    </svg>
+                </div>
+                <div class="stat-number" id="placements">92%</div>
+                <div class="stat-label">Success Rate</div>
+            </div>
+        </div>
+
+        <div class="dashboard">
+            <!-- Activity Feed -->
+            <div class="activity-panel">
+                <div class="panel-header">
+                    <div class="panel-title">
+                        Live Matching Activity
+                        <span class="live-indicator"></span>
+                    </div>
+                    <button class="filter-btn">
+                        <!-- Filter Icon -->
+                        <svg viewBox="0 0 24 24">
+                            <path d="M10 18h4v-2h-4v2zM3 6v2h18V6H3zm3 7h12v-2H6v2z"/>
+                        </svg>
+                        Filter
+                    </button>
+                </div>
+                <div class="loading-bar"></div>
+                <div class="activity-list" id="activityList">
+                    <!-- Activity items will be dynamically added here -->
+                </div>
+            </div>
+
+            <!-- Teams/Offices Table -->
+            <div class="agents-panel">
+                <div class="panel-header">
+                    <div class="panel-title">Teams & Offices Seeking Agents</div>
+                </div>
+                
+                <div class="tabs">
+                    <button class="tab active" onclick="showTab('teams')">Top Teams</button>
+                    <button class="tab" onclick="showTab('offices')">Offices</button>
+                    <button class="tab" onclick="showTab('lenders')">Lender Partners</button>
+                    <button class="tab" onclick="showTab('agents')">Available Agents</button>
+                </div>
+
+                <div class="search-wrapper">
+                    <svg class="search-icon" viewBox="0 0 24 24">
+                        <path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/>
+                    </svg>
+                    <input type="text" class="search-bar" placeholder="Search teams, offices, locations, or commission splits...">
+                </div>
+                
+                <div class="table-header">
+                    <div>Name</div>
+                    <div>Location</div>
+                    <div>Split</div>
+                    <div>Leads</div>
+                    <div>Rating</div>
+                    <div>Actions</div>
+                </div>
+                <div id="entityList">
+                    <!-- Entity rows will be dynamically added here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Notification Container -->
+    <div class="notification-container" id="notificationContainer"></div>
+
+    <script>
+        // SVG Icons as strings for dynamic use
+        const icons = {
+            trophy: '<svg viewBox="0 0 24 24"><path d="M7 2V7C7 11.418 10.582 15 15 15C15.936 15 16.807 14.775 17.583 14.373L18 17H6L6.417 14.373C7.193 14.775 8.064 15 9 15C13.418 15 17 11.418 17 7V2H7Z"/></svg>',
+            building: '<svg viewBox="0 0 24 24"><path d="M3 21H21V19H3V21ZM5 7V17H19V7H5ZM7 9H9V11H7V9ZM11 9H13V11H11V9ZM15 9H17V11H15V9ZM7 13H9V15H7V13ZM11 13H13V15H11V13ZM15 13H17V15H15V13ZM21 5H3V3H21V5Z"/></svg>',
+            dollar: '<svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1.41 16.09V20h-2.67v-1.93c-1.71-.36-3.16-1.46-3.27-3.4h1.96c.1.81.45 1.61 1.67 1.61 1.16 0 1.6-.64 1.6-1.23 0-.54-.3-1.08-1.75-1.43-1.44-.35-3.08-.85-3.08-2.83 0-1.37 1.02-2.58 2.92-2.98V6h2.67v1.95c1.37.37 2.55 1.35 2.68 3.08h-1.96c-.08-.64-.42-1.32-1.44-1.32-1.14 0-1.44.56-1.44 1.07 0 .59.4.98 1.82 1.34 1.43.36 3.15 1.04 3.15 3.08 0 1.44-1.1 2.62-3.16 2.89z"/></svg>',
+            email: '<svg viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>',
+            check: '<svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>',
+            star: '<svg viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>',
+            users: '<svg viewBox="0 0 24 24"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>'
+        };
+
+        // Teams and Offices data
+        const teams = [
+            { name: 'Keller Williams Elite', location: 'San Francisco, CA', split: '90/10', leads: '50+/mo', rating: '4.9', type: 'team' },
+            { name: 'RE/MAX Champions', location: 'Los Angeles, CA', split: '85/15', leads: '40+/mo', rating: '4.8', type: 'team' },
+            { name: 'Coldwell Banker Pro', location: 'San Diego, CA', split: '80/20', leads: '60+/mo', rating: '4.7', type: 'team' },
+            { name: 'Century 21 Masters', location: 'Oakland, CA', split: '90/10', leads: '35+/mo', rating: '4.9', type: 'team' },
+            { name: 'Compass Elite Group', location: 'Honolulu, HI', split: '95/5', leads: '45+/mo', rating: '5.0', type: 'team' },
+            { name: 'eXp Realty Leaders', location: 'Maui, HI', split: '85/15', leads: '55+/mo', rating: '4.8', type: 'team' }
+        ];
+
+        const offices = [
+            { name: 'Berkshire Hathaway HomeServices', location: 'Palo Alto, CA', split: '70/30', leads: '30+/mo', rating: '4.8', type: 'office' },
+            { name: 'Sotheby\'s International', location: 'Beverly Hills, CA', split: '75/25', leads: '25+/mo', rating: '4.9', type: 'office' },
+            { name: 'Douglas Elliman', location: 'Miami, FL', split: '80/20', leads: '40+/mo', rating: '4.7', type: 'office' },
+            { name: 'Corcoran Group', location: 'New York, NY', split: '70/30', leads: '35+/mo', rating: '4.8', type: 'office' }
+        ];
+
+        const lenders = [
+            { name: 'Wells Fargo Home Mortgage', location: 'National', split: 'Referral', leads: 'Unlimited', rating: '4.6', type: 'lender' },
+            { name: 'Chase Home Lending', location: 'California', split: 'Referral', leads: 'Unlimited', rating: '4.5', type: 'lender' },
+            { name: 'Quicken Loans', location: 'National', split: 'Referral', leads: 'Unlimited', rating: '4.8', type: 'lender' },
+            { name: 'Bank of America', location: 'West Coast', split: 'Referral', leads: 'Unlimited', rating: '4.4', type: 'lender' }
+        ];
+
+        // Activity templates
+        const activityTemplates = [
+            { 
+                icon: 'trophy',
+                type: 'team',
+                main: 'Agent matched to Top Team!',
+                detail: '{agent} matched with {team}',
+                benefits: ['Leads Provided', 'CRM Access', 'Coaching', '90/10 Split']
+            },
+            { 
+                icon: 'building',
+                type: 'office',
+                main: 'Office placement confirmed',
+                detail: '{agent} joining {office}',
+                benefits: ['Desk Space', 'Marketing Support', 'Training']
+            },
+            { 
+                icon: 'dollar',
+                type: 'lender',
+                main: 'Lender partnership activated',
+                detail: '{agent} partnered with {lender}',
+                benefits: ['Referral Network', 'Co-marketing', 'Lead Share']
+            },
+            { 
+                icon: 'email',
+                type: 'email',
+                main: 'Introduction email sent',
+                detail: 'Connecting {agent} with {team}',
+                benefits: []
+            },
+            { 
+                icon: 'check',
+                type: 'confirm',
+                main: 'Interview scheduled',
+                detail: '{agent} meeting {team} tomorrow',
+                benefits: []
+            },
+            { 
+                icon: 'users',
+                type: 'referral',
+                main: 'Referral source matched',
+                detail: '{agent} connected to referral network',
+                benefits: ['Warm Leads', 'Referral Fee']
+            }
+        ];
+
+        // Random names
+        const agentNames = ['Sarah Chen', 'Michael Johnson', 'Emily Rodriguez', 'David Kim', 'Jessica Williams', 'Robert Taylor', 'Amanda Lee', 'Chris Martinez', 'Lisa Anderson', 'James Wilson'];
+        const teamNames = teams.map(t => t.name);
+        const officeNames = offices.map(o => o.name);
+        const lenderNames = lenders.map(l => l.name);
+
+        // Show Team Match Notification
+        function showTeamMatch() {
+            const container = document.getElementById('notificationContainer');
+            const notification = document.createElement('div');
+            notification.className = 'match-notification';
+            
+            const agent = agentNames[Math.floor(Math.random() * agentNames.length)];
+            const team = teams[Math.floor(Math.random() * teams.length)];
+            
+            notification.innerHTML = `
+                <div class="match-header">
+                    <div class="match-icon">${icons.trophy}</div>
+                    <div class="match-title">
+                        <h3>Perfect Team Match Found!</h3>
+                        <div class="match-subtitle">Agent matched to Top-Producing Team</div>
+                    </div>
+                    <button class="match-close" onclick="this.closest('.match-notification').remove()">×</button>
+                </div>
+                
+                <div class="match-details">
+                    <div class="match-detail-row">
+                        <span class="match-detail-label">Agent:</span>
+                        <span class="match-detail-value">${agent}</span>
+                    </div>
+                    <div class="match-detail-row">
+                        <span class="match-detail-label">Team:</span>
+                        <span class="match-detail-value">${team.name}</span>
+                    </div>
+                    <div class="match-detail-row">
+                        <span class="match-detail-label">Location:</span>
+                        <span class="match-detail-value">${team.location}</span>
+                    </div>
+                    <div class="match-detail-row">
+                        <span class="match-detail-label">Commission Split:</span>
+                        <span class="match-detail-value" style="color: #10b981; font-weight: 700;">${team.split}</span>
+                    </div>
+                </div>
+                
+                <div class="match-benefits">
+                    <div class="match-benefits-title">Team Benefits:</div>
+                    <div class="benefit-list">
+                        <div class="benefit-item">
+                            <div class="benefit-check">${icons.check}</div>
+                            Leads Provided
+                        </div>
+                        <div class="benefit-item">
+                            <div class="benefit-check">${icons.check}</div>
+                            Full CRM Access
+                        </div>
+                        <div class="benefit-item">
+                            <div class="benefit-check">${icons.check}</div>
+                            Weekly Coaching
+                        </div>
+                        <div class="benefit-item">
+                            <div class="benefit-check">${icons.check}</div>
+                            Marketing Support
+                        </div>
+                        <div class="benefit-item">
+                            <div class="benefit-check">${icons.check}</div>
+                            Admin Assistance
+                        </div>
+                        <div class="benefit-item">
+                            <div class="benefit-check">${icons.check}</div>
+                            Transaction Coordinator
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="match-actions">
+                    <button class="match-btn primary">Connect Now</button>
+                    <button class="match-btn secondary">View Details</button>
+                </div>
+            `;
+            
+            container.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.style.animation = 'slideInRight 0.5s ease-out reverse';
+                setTimeout(() => notification.remove(), 500);
+            }, 10000);
+        }
+
+        // Show Office Match Notification
+        function showOfficeMatch() {
+            const container = document.getElementById('notificationContainer');
+            const notification = document.createElement('div');
+            notification.className = 'match-notification';
+            
+            const agent = agentNames[Math.floor(Math.random() * agentNames.length)];
+            const office = offices[Math.floor(Math.random() * offices.length)];
+            
+            notification.innerHTML = `
+                <div class="match-header">
+                    <div class="match-icon" style="background: linear-gradient(135deg, #059669, #047857);">${icons.building}</div>
+                    <div class="match-title">
+                        <h3>Premium Office Match!</h3>
+                        <div class="match-subtitle">Exclusive office opportunity available</div>
+                    </div>
+                    <button class="match-close" onclick="this.closest('.match-notification').remove()">×</button>
+                </div>
+                
+                <div class="match-details">
+                    <div class="match-detail-row">
+                        <span class="match-detail-label">Agent:</span>
+                        <span class="match-detail-value">${agent}</span>
+                    </div>
+                    <div class="match-detail-row">
+                        <span class="match-detail-label">Office:</span>
+                        <span class="match-detail-value">${office.name}</span>
+                    </div>
+                    <div class="match-detail-row">
+                        <span class="match-detail-label">Location:</span>
+                        <span class="match-detail-value">${office.location}</span>
+                    </div>
+                    <div class="match-detail-row">
+                        <span class="match-detail-label">Split:</span>
+                        <span class="match-detail-value" style="color: #059669; font-weight: 700;">${office.split}</span>
+                    </div>
+                </div>
+                
+                <div class="match-benefits">
+                    <div class="match-benefits-title">Office Benefits:</div>
+                    <div class="benefit-list">
+                        <div class="benefit-item">
+                            <div class="benefit-check">${icons.check}</div>
+                            Prime Location
+                        </div>
+                        <div class="benefit-item">
+                            <div class="benefit-check">${icons.check}</div>
+                            Private Office
+                        </div>
+                        <div class="benefit-item">
+                            <div class="benefit-check">${icons.check}</div>
+                            Marketing Budget
+                        </div>
+                        <div class="benefit-item">
+                            <div class="benefit-check">${icons.check}</div>
+                            Brand Recognition
+                        </div>
+                        <div class="benefit-item">
+                            <div class="benefit-check">${icons.check}</div>
+                            Legal Support
+                        </div>
+                        <div class="benefit-item">
+                            <div class="benefit-check">${icons.check}</div>
+                            Tech Stack Included
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="match-actions">
+                    <button class="match-btn primary">Schedule Tour</button>
+                    <button class="match-btn secondary">Learn More</button>
+                </div>
+            `;
+            
+            container.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.style.animation = 'slideInRight 0.5s ease-out reverse';
+                setTimeout(() => notification.remove(), 500);
+            }, 10000);
+        }
+
+        // Show Lender Match Notification
+        function showLenderMatch() {
+            const container = document.getElementById('notificationContainer');
+            const notification = document.createElement('div');
+            notification.className = 'match-notification';
+            
+            const agent = agentNames[Math.floor(Math.random() * agentNames.length)];
+            const lender = lenders[Math.floor(Math.random() * lenders.length)];
+            
+            notification.innerHTML = `
+                <div class="match-header">
+                    <div class="match-icon" style="background: linear-gradient(135deg, #4ade80, #22c55e);">${icons.dollar}</div>
+                    <div class="match-title">
+                        <h3>Lender Partnership Match!</h3>
+                        <div class="match-subtitle">Premium mortgage partner connection</div>
+                    </div>
+                    <button class="match-close" onclick="this.closest('.match-notification').remove()">×</button>
+                </div>
+                
+                <div class="match-details">
+                    <div class="match-detail-row">
+                        <span class="match-detail-label">Agent:</span>
+                        <span class="match-detail-value">${agent}</span>
+                    </div>
+                    <div class="match-detail-row">
+                        <span class="match-detail-label">Lender:</span>
+                        <span class="match-detail-value">${lender.name}</span>
+                    </div>
+                    <div class="match-detail-row">
+                        <span class="match-detail-label">Coverage:</span>
+                        <span class="match-detail-value">${lender.location}</span>
+                    </div>
+                    <div class="match-detail-row">
+                        <span class="match-detail-label">Type:</span>
+                        <span class="match-detail-value" style="color: #4ade80; font-weight: 700;">Preferred Partner</span>
+                    </div>
+                </div>
+                
+                <div class="match-benefits">
+                    <div class="match-benefits-title">Partnership Benefits:</div>
+                    <div class="benefit-list">
+                        <div class="benefit-item">
+                            <div class="benefit-check">${icons.check}</div>
+                            Pre-qualified Leads
+                        </div>
+                        <div class="benefit-item">
+                            <div class="benefit-check">${icons.check}</div>
+                            Referral Fees
+                        </div>
+                        <div class="benefit-item">
+                            <div class="benefit-check">${icons.check}</div>
+                            Co-marketing Budget
+                        </div>
+                        <div class="benefit-item">
+                            <div class="benefit-check">${icons.check}</div>
+                            Fast Pre-approvals
+                        </div>
+                        <div class="benefit-item">
+                            <div class="benefit-check">${icons.check}</div>
+                            Dedicated Support
+                        </div>
+                        <div class="benefit-item">
+                            <div class="benefit-check">${icons.check}</div>
+                            Training Resources
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="match-actions">
+                    <button class="match-btn primary">Start Partnership</button>
+                    <button class="match-btn secondary">View Terms</button>
+                </div>
+            `;
+            
+            container.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.style.animation = 'slideInRight 0.5s ease-out reverse';
+                setTimeout(() => notification.remove(), 500);
+            }, 10000);
+        }
+
+        // Add activity item
+        function addActivityItem(template) {
+            const activityList = document.getElementById('activityList');
+            const item = document.createElement('div');
+            
+            const agent = agentNames[Math.floor(Math.random() * agentNames.length)];
+            let entity = '';
+            let className = 'activity-item';
+            let iconClass = 'activity-type-icon';
+            
+            if (template.type === 'team') {
+                entity = teamNames[Math.floor(Math.random() * teamNames.length)];
+                className += ' match-team';
+                iconClass += ' team';
+            } else if (template.type === 'office') {
+                entity = officeNames[Math.floor(Math.random() * officeNames.length)];
+                className += ' match-office';
+                iconClass += ' office';
+            } else if (template.type === 'lender') {
+                entity = lenderNames[Math.floor(Math.random() * lenderNames.length)];
+                className += ' match-lender';
+                iconClass += ' lender';
+            } else {
+                entity = teamNames[Math.floor(Math.random() * teamNames.length)];
+            }
+            
+            item.className = className;
+            
+            const detail = template.detail
+                .replace('{agent}', agent)
+                .replace('{team}', entity)
+                .replace('{office}', entity)
+                .replace('{lender}', entity);
+            
+            let benefitsHTML = '';
+            if (template.benefits && template.benefits.length > 0) {
+                benefitsHTML = '<div class="activity-benefits">';
+                template.benefits.forEach(benefit => {
+                    const tagClass = template.type === 'team' ? 'gold' : '';
+                    benefitsHTML += `<span class="benefit-tag ${tagClass}">${benefit}</span>`;
+                });
+                benefitsHTML += '</div>';
+            }
+            
+            item.innerHTML = `
+                <div class="${iconClass}">${icons[template.icon]}</div>
+                <div class="activity-content">
+                    <div class="activity-main">${template.main}</div>
+                    <div class="activity-detail">${detail}</div>
+                    ${benefitsHTML}
+                    <div class="activity-time">just now</div>
+                </div>
+            `;
+            
+            activityList.insertBefore(item, activityList.firstChild);
+            
+            while (activityList.children.length > 10) {
+                activityList.removeChild(activityList.lastChild);
+            }
+        }
+
+        // Render entities
+        function renderEntities(type = 'teams') {
+            const entityList = document.getElementById('entityList');
+            entityList.innerHTML = '';
+            
+            let data = teams;
+            if (type === 'offices') data = offices;
+            if (type === 'lenders') data = lenders;
+            
+            data.forEach((entity, index) => {
+                setTimeout(() => {
+                    const row = document.createElement('div');
+                    row.className = 'entity-row';
+                    
+                    const initials = entity.name.split(' ').map(w => w[0]).join('').slice(0, 2);
+                    
+                    row.innerHTML = `
+                        <div class="entity-info">
+                            <div class="entity-avatar">${initials}</div>
+                            <div class="entity-name">${entity.name}</div>
+                        </div>
+                        <div style="color: var(--gray); font-size: 14px;">${entity.location}</div>
+                        <div><span class="commission-split">${entity.split}</span></div>
+                        <div><span class="leads-badge">${entity.leads}</span></div>
+                        <div class="rating">${icons.star} ${entity.rating}</div>
+                        <div class="action-buttons">
+                            <button class="action-btn">Connect</button>
+                            <button class="action-btn">Details</button>
+                        </div>
+                    `;
+                    
+                    entityList.appendChild(row);
+                }, index * 100);
+            });
+        }
+
+        // Tab switching
+        function showTab(tab) {
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            event.target.classList.add('active');
+            renderEntities(tab);
+        }
+
+        // Initialize activity feed
+        function initializeActivityFeed() {
+            for (let i = 0; i < 6; i++) {
+                setTimeout(() => {
+                    const template = activityTemplates[Math.floor(Math.random() * activityTemplates.length)];
+                    addActivityItem(template);
+                }, i * 500);
+            }
+        }
+
+        // Simulate live updates
+        function simulateLiveUpdates() {
+            setInterval(() => {
+                const template = activityTemplates[Math.floor(Math.random() * activityTemplates.length)];
+                addActivityItem(template);
+                
+                const matches = document.getElementById('matches');
+                matches.textContent = parseInt(matches.textContent) + 1;
+                
+                const rand = Math.random();
+                if (rand > 0.85) {
+                    showTeamMatch();
+                } else if (rand > 0.75) {
+                    showOfficeMatch();
+                } else if (rand > 0.65) {
+                    showLenderMatch();
+                }
+            }, 8000);
+        }
+
+        // Search functionality
+        document.querySelector('.search-bar').addEventListener('input', function(e) {
+            const searchTerm = e.target.value.toLowerCase();
+            const rows = document.querySelectorAll('.entity-row');
+            
+            rows.forEach(row => {
+                const text = row.textContent.toLowerCase();
+                row.style.display = text.includes(searchTerm) ? 'grid' : 'none';
+            });
+        });
+
+        // Animate numbers
+        function animateNumbers() {
+            const numbers = document.querySelectorAll('.stat-number');
+            numbers.forEach(num => {
+                if (num.textContent.includes('%')) return;
+                const final = parseInt(num.textContent.replace(',', ''));
+                let current = 0;
+                const increment = final / 30;
+                const timer = setInterval(() => {
+                    current += increment;
+                    if (current >= final) {
+                        num.textContent = final.toLocaleString();
+                        clearInterval(timer);
+                    } else {
+                        num.textContent = Math.floor(current).toLocaleString();
+                    }
+                }, 40);
+            });
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            renderEntities('teams');
+            initializeActivityFeed();
+            simulateLiveUpdates();
+            animateNumbers();
+            
+            setTimeout(() => showTeamMatch(), 2000);
+            setTimeout(() => showOfficeMatch(), 5000);
+            setTimeout(() => showLenderMatch(), 8000);
+        });
+    </script>
+</body>
+</html>

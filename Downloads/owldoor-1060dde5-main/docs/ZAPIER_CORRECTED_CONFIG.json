@@ -1,0 +1,270 @@
+{
+  "version": "1.0.0",
+  "platformVersion": "16.5.1",
+  "authentication": {
+    "type": "custom",
+    "test": {
+      "body": {
+        "action": "list_leads"
+      },
+      "headers": {
+        "X-API-KEY": "{{bundle.authData.api_key}}",
+        "content-type": "application/json"
+      },
+      "method": "POST",
+      "removeMissingValuesFrom": {
+        "body": true,
+        "params": true
+      },
+      "url": "https://oouyhixnjwjnombgcyjl.supabase.co/functions/v1/zapier-api"
+    },
+    "fields": [
+      {
+        "helpText": "Enter your OwlDoor API key. Generate one in the Admin Dashboard → Zapier section",
+        "computed": false,
+        "key": "api_key",
+        "required": true,
+        "label": "API Key",
+        "type": "password"
+      }
+    ],
+    "customConfig": {},
+    "connectionLabel": ""
+  },
+  "requestTemplate": {
+    "params": {
+      "api_key": "{{bundle.authData.api_key}}"
+    },
+    "headers": {
+      "X-API-KEY": "{{bundle.authData.api_key}}"
+    }
+  },
+  "creates": {
+    "create_lead": {
+      "operation": {
+        "perform": {
+          "source": "const options = {\n  url: 'https://oouyhixnjwjnombgcyjl.supabase.co/functions/v1/zapier-api',\n  method: 'POST',\n  headers: {\n    'X-API-KEY': bundle.authData.api_key,\n    'Content-Type': 'application/json'\n  },\n  body: {\n    'action': 'create_lead',\n    'data': bundle.inputData\n  }\n};\n\nreturn z.request(options)\n  .then((response) => {\n    response.throwForStatus();\n    return response.json;\n  });\n"
+        },
+        "inputFields": [
+          {
+            "key": "record_type",
+            "label": "Record Type",
+            "type": "string",
+            "default": "leads",
+            "choices": [
+              {
+                "value": "leads",
+                "label": "Leads",
+                "sample": "leads"
+              },
+              {
+                "value": "pros",
+                "label": "Pros",
+                "sample": "pros"
+              },
+              {
+                "value": "clients",
+                "label": "Clients",
+                "sample": "clients"
+              }
+            ],
+            "required": false,
+            "altersDynamicFields": true,
+            "helpText": "Select the type of record. Fields will update based on your selection."
+          },
+          {
+            "source": "const options = {\n  url: 'https://oouyhixnjwjnombgcyjl.supabase.co/functions/v1/zapier-dynamic-fields',\n  method: 'GET',\n  params: {\n    type: bundle.inputData.record_type || 'leads'\n  },\n  headers: {\n    'x-api-key': bundle.authData.api_key,\n    'Content-Type': 'application/json'\n  }\n};\n\nreturn z.request(options)\n  .then((response) => {\n    response.throwForStatus();\n    return response.json;\n  })\n  .catch((error) => {\n    // Fallback to minimal fields if dynamic fields fail\n    return [\n      {\n        key: 'full_name',\n        label: 'Full Name',\n        type: 'string',\n        required: true\n      },\n      {\n        key: 'phone',\n        label: 'Phone',\n        type: 'string',\n        required: true\n      },\n      {\n        key: 'email',\n        label: 'Email',\n        type: 'string',\n        required: false\n      }\n    ];\n  });\n"
+          }
+        ],
+        "sample": {
+          "success": true,
+          "data": {
+            "id": "4c753c55-d261-4d5e-bdeb-48f11b0d13db",
+            "user_id": "349ac2d0-e318-4d8d-a957-7bb5fd241e6f",
+            "full_name": "Darren Johnson",
+            "first_name": "Darren",
+            "last_name": "Johnson",
+            "email": "darren.johnson@example.com",
+            "phone": "+18588886399",
+            "lead_type": "real_estate_agent",
+            "status": "new",
+            "pipeline_stage": "new",
+            "pipeline_type": "staff",
+            "qualification_score": 70,
+            "source": "zapier",
+            "motivation": 10,
+            "experience": 11,
+            "transactions": 77,
+            "total_sales": 15500000,
+            "company": "exp",
+            "brokerage": "exp",
+            "team": "KW",
+            "license_type": "Broker",
+            "state_license": "CA",
+            "license": "01234567",
+            "cities": [
+              "Los Angeles",
+              "San Diego"
+            ],
+            "states": [
+              "CA"
+            ],
+            "counties": [
+              "Los Angeles",
+              "San Diego"
+            ],
+            "zip_codes": [
+              "92109",
+              "92101",
+              "90210"
+            ],
+            "wants": [
+              "leads",
+              "training",
+              "technology"
+            ],
+            "skills": [
+              "lead generation",
+              "social media",
+              "luxury homes"
+            ],
+            "tags": [
+              "hot lead",
+              "high producer"
+            ],
+            "profile_url": "https://example.com/profile",
+            "image_url": "https://example.com/avatar.jpg",
+            "radius": 25,
+            "notes": "Highly motivated agent looking for more leads",
+            "ai_zap_help": "Find missing data for this lead",
+            "created_at": "2025-01-28T23:16:20.729719+00:00",
+            "updated_at": "2025-01-28T23:16:20.729719+00:00"
+          }
+        },
+        "outputFields": [
+          {
+            "key": "success"
+          },
+          {
+            "key": "data__id"
+          },
+          {
+            "key": "data__user_id"
+          },
+          {
+            "key": "data__full_name"
+          },
+          {
+            "key": "data__first_name"
+          },
+          {
+            "key": "data__last_name"
+          },
+          {
+            "key": "data__email"
+          },
+          {
+            "key": "data__phone"
+          },
+          {
+            "key": "data__lead_type"
+          },
+          {
+            "key": "data__status"
+          },
+          {
+            "key": "data__pipeline_stage"
+          },
+          {
+            "key": "data__pipeline_type"
+          },
+          {
+            "key": "data__qualification_score"
+          },
+          {
+            "key": "data__source"
+          },
+          {
+            "key": "data__motivation"
+          },
+          {
+            "key": "data__experience"
+          },
+          {
+            "key": "data__transactions"
+          },
+          {
+            "key": "data__total_sales"
+          },
+          {
+            "key": "data__company"
+          },
+          {
+            "key": "data__brokerage"
+          },
+          {
+            "key": "data__team"
+          },
+          {
+            "key": "data__license_type"
+          },
+          {
+            "key": "data__state_license"
+          },
+          {
+            "key": "data__license"
+          },
+          {
+            "key": "data__ai_zap_help"
+          },
+          {
+            "key": "data__cities[]"
+          },
+          {
+            "key": "data__states[]"
+          },
+          {
+            "key": "data__counties[]"
+          },
+          {
+            "key": "data__zip_codes[]"
+          },
+          {
+            "key": "data__wants[]"
+          },
+          {
+            "key": "data__skills[]"
+          },
+          {
+            "key": "data__tags[]"
+          },
+          {
+            "key": "data__profile_url"
+          },
+          {
+            "key": "data__image_url"
+          },
+          {
+            "key": "data__radius"
+          },
+          {
+            "key": "data__notes"
+          },
+          {
+            "key": "data__created_at"
+          },
+          {
+            "key": "data__updated_at"
+          }
+        ]
+      },
+      "display": {
+        "description": "Creates a New Lead in OwlDoor with dynamic custom fields",
+        "hidden": false,
+        "label": "Create Lead"
+      },
+      "key": "create_lead",
+      "noun": "Lead"
+    }
+  }
+}

@@ -1,0 +1,20 @@
+/* Custom cursors for map drawing modes */
+.map-freehand {
+  cursor: url('/cursors/pencil.svg') 2 22, crosshair !important;
+}
+
+.map-freehand * {
+  cursor: url('/cursors/pencil.svg') 2 22, crosshair !important;
+}
+
+.map-select {
+  cursor: pointer !important;
+}
+
+.map-circle {
+  cursor: crosshair !important;
+}
+
+.map-polygon {
+  cursor: crosshair !important;
+}
